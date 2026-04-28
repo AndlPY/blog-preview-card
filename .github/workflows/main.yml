@@ -1,7 +1,13 @@
 name: HTML/CSS Snapshot Testing
 
 on:
-  workflow_dispatch:   # 👈 this enables manual runs
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   snapshot-test:
@@ -14,15 +20,13 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
     
     - name: Install dependencies
       run: |
-        npm install -g playwright
-        npm install playwright@latest
-        npx playwright install chromium
-    
+        npm ci
+        npx playwright install --with-deps chromium
 
     - name: Create snapshot and diff directories
       run: mkdir -p snapshots/current snapshots/diff
